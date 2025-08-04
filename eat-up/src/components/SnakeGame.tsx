@@ -1,39 +1,44 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+
+interface Position {
+  x: number;
+  y: number;
+}
 
 const SnakeGame = () => {
   // Much smaller, more reasonable grid size
   const GRID_SIZE = 12;
-  const INITIAL_SNAKE = [{ x: 6, y: 6 }];
-  const INITIAL_FOOD = { x: 3, y: 3 };
-  const INITIAL_DIRECTION = { x: 0, y: -1 };
+  const INITIAL_SNAKE: Position[] = [{ x: 6, y: 6 }];
+  const INITIAL_FOOD: Position = { x: 3, y: 3 };
+  const INITIAL_DIRECTION: Position = { x: 0, y: -1 };
 
-  const [snake, setSnake] = useState(INITIAL_SNAKE);
-  const [food, setFood] = useState(INITIAL_FOOD);
-  const [direction, setDirection] = useState(INITIAL_DIRECTION);
-  const [gameOver, setGameOver] = useState(false);
-  const [gameStarted, setGameStarted] = useState(false);
-  const [score, setScore] = useState(0);
-  const [highScore, setHighScore] = useState(0);
-  const [speed, setSpeed] = useState(250);
+  const [snake, setSnake] = useState<Position[]>(INITIAL_SNAKE);
+  const [food, setFood] = useState<Position>(INITIAL_FOOD);
+  const [direction, setDirection] = useState<Position>(INITIAL_DIRECTION);
+  const [gameOver, setGameOver] = useState<boolean>(false);
+  const [gameStarted, setGameStarted] = useState<boolean>(false);
+  const [score, setScore] = useState<number>(0);
+  const [highScore, setHighScore] = useState<number>(0);
+  const [speed, setSpeed] = useState<number>(250);
 
   // Generate random food position
-  const generateFood = useCallback(() => {
-    let newFood;
+  const generateFood = useCallback((): Position => {
+    let newFood: Position;
     do {
       newFood = {
         x: Math.floor(Math.random() * GRID_SIZE),
         y: Math.floor(Math.random() * GRID_SIZE)
       };
-    } while (snake.some(segment => segment.x === newFood.x && segment.y === newFood.y));
+    } while (snake.some((segment: Position) => segment.x === newFood.x && segment.y === newFood.y));
     return newFood;
   }, [snake]);
 
   // Check collision with walls or self
-  const checkCollision = useCallback((head) => {
+  const checkCollision = useCallback((head: Position): boolean => {
     if (head.x < 0 || head.x >= GRID_SIZE || head.y < 0 || head.y >= GRID_SIZE) {
       return true;
     }
-    return snake.some(segment => segment.x === head.x && segment.y === head.y);
+    return snake.some((segment: Position) => segment.x === head.x && segment.y === head.y);
   }, [snake]);
 
   // Game loop
@@ -75,7 +80,7 @@ const SnakeGame = () => {
 
   // Handle keyboard input
   useEffect(() => {
-    const handleKeyPress = (e) => {
+    const handleKeyPress = (e: KeyboardEvent) => {
       e.preventDefault();
       
       if (!gameStarted && !gameOver) {

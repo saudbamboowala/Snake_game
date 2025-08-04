@@ -1,9 +1,10 @@
 import SnakeGame from './components/SnakeGame';
 
-function App() {
+const App = () => {
   return (
+
       <SnakeGame />
+    
   );
 }
-
 export default App;
